@@ -30,6 +30,10 @@ def generate_ai_news(user):
     )
     return completion.choices[0].message.content.strip('\"')
 
+def update_user(user):
+  response = requests.put(f"{api_url}/users/{user['id']}", json=user)
+  return True if response.status_code == 200 else False
+
 
 users = [user for id in users_ids if (user := get_clients(id)) is not None]
 
@@ -39,3 +43,7 @@ for user in users:
     user['news'].append({
       "description": news
     })
+
+for user in users:
+  success = update_user(user)
+  print(f"User {user['name']} updated? {success}!")
